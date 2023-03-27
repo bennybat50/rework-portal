@@ -173,25 +173,26 @@ class Nav extends React.Component {
       sub_link: null,
       notice: 0
     },
-    {
-      id: 2,
-      name: "Assessment",
-      icon: <Book size={18} />,
-      link: "/assessment",
-      has_sub: false,
-      sub_link: null, 
-      notice: 0
-    },
-    {
-      id: 3,
-      name: "Live Class",
-      icon: <Video size={18} />,
-      link: "/liveclass",
+    // {
+    //   id: 2,
+    //   name: "Assessment",
+    //   icon: <Book size={18} />,
+    //   link: "/assessment",
+    //   has_sub: false,
+    //   sub_link: null, 
+    //   notice: 0
+    // },
+    // {
+    //   id: 3,
+    //   name: "Live Class",
+    //   icon: <Video size={18} />,
+    //   link: "/liveclass",
      
-      has_sub: false,
-      sub_link: null,
-      notice: 0
-    }]
+    //   has_sub: false,
+    //   sub_link: null,
+    //   notice: 0
+    // }
+  ]
 
    
      

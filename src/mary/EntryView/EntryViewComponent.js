@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState,useCallback } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Storage } from '../../context/Store';
 import { UploadCloud } from 'react-feather';
@@ -27,14 +27,12 @@ function EntryViewComponent() {
   let [userProject, setUserProject] = useState({});
   let [projectMsg, setProjectMsg] = useState('');
   let [isLoading, setIsLoading] = useState(false);
-
-  const [days, setDays] = React.useState(0);
-  const [hours, setHours] = React.useState(0);
-  const [minutes, setMinutes] = React.useState(0);
-  const [seconds, setSeconds] = React.useState(0);
+ 
   const [deadline, setDeadline] = useState(Date.now());
-  const [timer,setTimer] = useState(0)
-
+  const [timer, setTimer] = useState(0)
+  let [projectExpired, setExpired] = useState(false);
+  let [countDownTime, setCountDownTime] = useState('');
+  const [coutDown, setCountDown] = useState(0);
   let interval;
 
 
@@ -48,8 +46,8 @@ function EntryViewComponent() {
           setUserProject(res);
           setPhaseId(res.phases[0].id);
           setAssessmentId(res.id);
-          setDeadline(res.end_date_timestamp);        
-         
+          setDeadline(res.end_date_timestamp);
+
         }
         if (ae_user_ID && res.type === 'NOT_ASSIGNED') {
           setProjectMsg(res.msg);
@@ -58,44 +56,58 @@ function EntryViewComponent() {
 
   };
 
-  const getTime = (deadline) => {
+   
+
+
+
+
+  useEffect(() => {
+    viewStudentProject() 
+
+  }, []);
+
+  useEffect(() => {
+    setInterval(function () {
+      setCountDown(coutDown+1);
+      const time = new Date(parseInt(deadline)).getTime() - Date.now();
+      let days,hours,minutes,seconds;
+      if (time <= 0) {
+        days=0;
+        hours=0
+        minutes=0;
+        seconds=0; 
+      } else {
+        days=Math.floor(time / (1000 * 60 * 60 * 24));
+        hours=Math.floor((time / (1000 * 60 * 60)) % 24);
+        minutes=Math.floor((time / 1000 / 60) % 60);
+        seconds=Math.floor((time / 1000) % 60);
+      }
+        setCountDownTime(<><div>
+          <h1>{days}</h1>
+          <h4>DAYS</h4>
+        </div>
+          <div>
+            <h1>{hours}</h1>
+            <h4>HR</h4>
+          </div>
+          <div>
+            <h1>{minutes}</h1>
+            <h4>MIN</h4>
+          </div>
+          <div>
+            <h1>{seconds}</h1>
+            <h4>SEC</h4>
+          </div></>)
   
-    const time = new Date(parseInt(deadline)).getTime() - Date.now();
-      console.log(time)
-    if(time <= 0){
-          
-      setDays(0)
-      setHours(0)
-      setMinutes(0)
-      setSeconds(0)
+      }, 1000) 
 
-    }else{
- 
-      setDays(Math.floor(time / (1000 * 60 * 60 * 24)));
-      setHours(Math.floor((time / (1000 * 60 * 60)) % 24));
-      setMinutes(Math.floor((time / 1000 / 60) % 60));
-      setSeconds(Math.floor((time / 1000) % 60));
-   
-    }
-   
-  };
-
-  const [coutDown,setCountDown] = useState(0);
-
-
-    useEffect(() => {
-
-      // let interval = setInterval(getTime(deadline) , 1000);
-      viewStudentProject()
-
-      return getTime(deadline)
-    }, []);
+  }, [coutDown]);
 
   const handleChange = (e) => {
     fileName = e.target.files[0].name;
     setprojectFile(e.target.files[0]);
     setImagePreview(URL.createObjectURL(e.target.files[0]));
-   
+
     setUploadStatus(true);
   };
 
@@ -119,7 +131,7 @@ function EntryViewComponent() {
       .post(url, entryFormData)
       .then((res) => {
         if (res.status === 200) {
-  
+
           setIsLoading(false)
           ae_setprojectSubmitted(true);
         } else {
@@ -147,6 +159,8 @@ function EntryViewComponent() {
     element.click();
   };
 
+  
+
   return (
     <>
       <div className="ae_entry_view row d-flex ">
@@ -155,44 +169,44 @@ function EntryViewComponent() {
         ) : (
           <div className="ae_entry_main col col-sm-12 col-md-6 col-lg-6">
             {userProject ? (
-              
+
               <div class="card mb-4">
                 <div class="card-header">
                   <p className="ae_entry_title">Project Information</p>
                   <div className="ae_entry_main_title">
                     <h1>{userProject.title}</h1>
-                    
+
                   </div>
                 </div>
                 <div class="card-body">
-                  {userProject.title==null? <div className="text-center" >
-                  <h4>Project Not assigned !</h4>
-                  <p>Complete assessment class to get your project</p><br/><br/></div> : <>
-                  <p>(Duration: {userProject.duration})</p>
-                  <p>Brief Description:</p>
-                  {userProject.descp}
+                  {userProject.title == null ? <div className="text-center" >
+                    <h4>Project Not assigned !</h4>
+                    <p>Complete assessment class to get your project</p><br /><br /></div> : <>
+                    <p>(Duration: {userProject.duration})</p><br />
+                    <p>Brief Description:</p>
+                    {userProject.descp}
 
-                  {userProject.phases?.map((e) => {
-                 
-                    return (
-                      <button
-                        className="mt-3 mb-4 col col-sm-12 col-md-8 col-lg-8  btn btn-primary btn-user btn-block shadow-lg py-3"
-                        id="downloadBtn"
-                        value="download"
-                      >
-                        <link size="12px" />
-                        <a
-                          href={userProject.resource_links}
-                          download
-                          style={{ color: 'white', textDecoration: 'none' }}
+                    {userProject.phases?.map((e) => {
+
+                      return (
+                        <button
+                          className="mt-3 mb-4 col col-sm-12 col-md-8 col-lg-8  btn btn-primary btn-user btn-block shadow-lg py-3"
+                          id="downloadBtn"
+                          value="download"
                         >
-                          Click here to download resources
-                        </a>
-                      </button>
-                    );
-                  })}
+                          <link size="12px" />
+                          <a
+                            href={userProject.resource_links}
+                            download
+                            style={{ color: 'white', textDecoration: 'none' }}
+                          >
+                            Click here to download resources
+                          </a>
+                        </button>
+                      );
+                    })}
                   </>}
-                  
+
                 </div>
               </div>
             ) : (
@@ -212,6 +226,14 @@ function EntryViewComponent() {
               ''
             ) : (
               <div class="col col-sm-12 col-md-12 col-lg-12">
+                
+                 {new Date(parseInt(deadline)).getTime() - Date.now() <=0? <div class="card mb-4">
+                 <div class="card-header text-center">
+                   <p className="ae_font_weight">Project Status</p>
+                   <h1 className='text-danger'>Project Expired</h1>
+                 </div>
+                 <hr />
+               </div> : 
                 <form
                   onSubmit={handleProjectSubmit}
                   enctype="multipart/form-data"
@@ -220,26 +242,13 @@ function EntryViewComponent() {
                     <div class="card-header text-center">
                       <p className="ae_font_weight">Count Down Timer</p>
                       <div className="d-flex justify-content-around align-items-center ae_countdown">
-                        <div>
-                          <h1>{days}</h1>
-                          <h4>DAYS</h4>
-                        </div>
-                        <div>
-                          <h1>{hours}</h1>
-                          <h4>HR</h4>
-                        </div>
-                        <div>
-                          <h1>{minutes}</h1>
-                          <h4>MIN</h4>
-                        </div>
-                        <div>
-                          <h1>{seconds}</h1>
-                          <h4>SEC</h4>
-                        </div>
+                        
+                        
+                        {countDownTime}
                       </div>
                     </div>
                     <hr />
-                    {userProject.title==null?<></>:<div class="card-body ae_countdown_upload">
+                    {userProject.title == null ? <></> : <div class="card-body ae_countdown_upload">
                       <p className="text-center text-black ae_font_weight ae_countdown_txt">
                         Submit Your Project
                       </p>
@@ -294,19 +303,20 @@ function EntryViewComponent() {
                           type="submit"
                         >
                           {/* <link size="12px" /> */}
-                         
+
 
                           {isLoading ? (
-                      <SyncLoader size={8} color="white" />
-                    ) : (
-                      " Submit Project"
-                    )}
+                            <SyncLoader size={8} color="white" />
+                          ) : (
+                            " Submit Project"
+                          )}
                         </button>
                       </div>
                     </div>}
-                    
+
                   </div>
-                </form>
+                </form>}
+
               </div>
             )}
           </div>
