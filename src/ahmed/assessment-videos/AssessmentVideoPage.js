@@ -19,14 +19,15 @@ function AssessmentVideoPage() {
         fetch(url)
             .then((e) => e.json())
             .then(res => setModule(res))
-        // .then(res => loadCurrentModule(res.id))
     };
+
     let loadForum = () => {
         let url = baseUrl + "/forums?batch=batch_10&slot=weekday";
         fetch(url)
             .then((e) => e.json())
             .then((res) => setForum(res));
     };
+    
     // let loadCurrentModule = (a) => {
     //     let url = `${baseUrl}/students/${user_id}/self-pace/modules/${a}`;
     //     fetch(url)
