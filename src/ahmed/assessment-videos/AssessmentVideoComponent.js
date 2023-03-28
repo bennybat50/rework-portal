@@ -77,7 +77,7 @@ function AssessmentVidsComponent(props) {
         <>
             <div>
                 <div className="row mx-3 mb-3">
-                    <div className="col-lg-8">
+                    <div className="col-lg-7">
                         <div className="mb-3 pb-3 main-course-details-container-ah">
 
                             {item ? <div>
@@ -214,7 +214,7 @@ function AssessmentVidsComponent(props) {
                         </div>
                     </div>
 
-                    <div className={"col-lg-4 col-md-6"}>
+                    <div className={"col-lg-5 col-md-6"}>
                         <div className="p-2 main_phase_break_container_ah">
                             <h4 className="mb-3">assessment contents</h4>
                             <Accordion defaultActiveKey={0}>
@@ -234,7 +234,7 @@ function AssessmentVidsComponent(props) {
                                             <Accordion.Collapse eventKey={i}>
 
 
-                                                <Card.Body className="">
+                                                <Card.Body className="ps-3">
                                                     <ol>
                                                         {e.lessons?.map((f, j) => {
                                                             let showDone;
@@ -245,8 +245,10 @@ function AssessmentVidsComponent(props) {
                                                             let showDone4;
                                                             let colorDone;
                                                             let colorDone1;
+                                                            let showText;
                                                             if (f.is_completed) {
-                                                                showDone = true; colorDone = "#00afef";
+                                                                showDone = true;
+                                                                colorDone = "#00afef";
                                                             } else {
                                                                 showDone = false
                                                             }
@@ -254,11 +256,14 @@ function AssessmentVidsComponent(props) {
                                                             if (f.lesson_type.toLowerCase() === "classwork") {
                                                                 colorDone1 = "#00afef"
                                                                 showDone2 = true
+                                                                showText = `Classwork: ${f.title}`
                                                             } else if (f.lesson_type.toLowerCase() === "assignment") {
                                                                 boldDone = 700
                                                                 showDone4 = true
+                                                                showText = `Assignment: ${f.title}`
                                                             } else {
                                                                 showDone3 = true
+                                                                showText = `${f.title}`
                                                             }
 
                                                             if (f.lesson_type.toLowerCase() === "video") {
@@ -266,27 +271,18 @@ function AssessmentVidsComponent(props) {
                                                             }
                                                             return (
                                                                 <>
-                                                                    <div className="flex mb-1" key={j} style={{ color: colorDone1, height: "30px", alignItems: "center", fontWeight: boldDone, cursor: "pointer" }} >
-                                                                        <div className="flex" style={{ width: "80%" }} onClick={() => changeView(f.lesson_type, j)} >
+                                                                    <div className="flex mb-1" key={j} style={{ color: colorDone1, height: "30px", fontWeight: boldDone, cursor: "pointer", justifyContent: "space-between" }} >
+                                                                        <div className="flex" style={{ width: "84%", alignItems: "center" }} onClick={() => changeView(f.lesson_type, j)} >
                                                                             <div style={{ marginLeft: "-40px", display: "flex", width: "15%" }}>
                                                                                 {showDone ? <CheckCircle width={"50%"} color={colorDone} /> : <Circle width={"50%"} />}
                                                                                 {showDone2 ? <Edit width={"50%"} style={{ marginLeft: "5px" }} /> : null}
                                                                                 {showDone3 ? <Play width={"50%"} style={{ marginLeft: "5px" }} /> : null}
                                                                                 {showDone4 ? <Briefcase width={"50%"} style={{ marginLeft: "5px" }} /> : null}
-
                                                                             </div>
-                                                                            <li style={{
-                                                                                marginLeft: "8px", fontSize: "13px", width: "100%", whiteSpace: "nowrap", overflow: "hidden",
-                                                                                textOverflow: "ellipsis", listStyle: "inside", listStyleType: "decimal"
-                                                                            }} key={j}>
-                                                                                {item2 ? <div className="flex" >
-                                                                                    <p>Classwork {f.title}</p>
-                                                                                </div> :
-                                                                                    <div className="flex">
-                                                                                        <p>Assignment</p>
-                                                                                        {f.title}
-                                                                                    </div>}
+                                                                            <li className="ms-4" style={{ fontSize: "12px" }}>
+                                                                                {showText}
                                                                             </li>
+
                                                                         </div>
                                                                         <div style={{ width: "15%" }}>
                                                                             {showDone1 ? <p style={{ fontSize: "10px", width: "100%", marginTop: "12px", textTransform: "lowercase" }} >{f.video_duration} mins</p> :
