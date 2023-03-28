@@ -10,7 +10,7 @@ function AssignmentGridComponent(props) {
   return (
     <>
       <div className="project-grid-ah">
-        <Link to={"/assignment-details-" + props.id} className="link-ah">
+        <Link to={"/assignment-details/" + props.id} className="link-ah">
           <div className="card-body">
             <div className="project-grid-status-ah flex-btw-ah">
               <span style={{ backgroundColor: statusColor }}>

@@ -4,22 +4,23 @@ import Nav from "../../template/Nav";
 import Topbar from "../../template/Topbar";
 import '../assets/css/payment.css';
 import PaymentComponent from "./PaymentComponent";
-import LoadingMsg from "../../components/LoadingMsg";
+import { SyncLoader } from 'react-spinners';
+
 import { Storage } from "../../context/Store";
+import LoadingMsg from "../../components/LoadingMsg";
 
 function PaymentPage() {
     let store = useContext(Storage);
     let [baseUrl] = store.URL;
     let [payments, SetPayment] = useState([]);
-    let [ae_user_ID, ae_setUser_ID] = store.ae_User_ID;
+    let [user_id] = store.ae_User_ID;
 
     useEffect(() => {
         loadPaymentDetails();
     }, []);
 
     let loadPaymentDetails = () => {
-        let url = baseUrl + "/students/" + ae_user_ID + "/payments";
-        console.log(url);
+        let url = baseUrl + "/students/" + user_id + "/payments";
         fetch(url)
             .then((e) => e.json())
             .then(res => SetPayment([res]))
@@ -96,7 +97,7 @@ function PaymentPage() {
                         </div>
 
                         {payments.length == 0 ?
-                            <LoadingMsg/> :
+                            <LoadingMsg/>:
                             payments.map((e, i) => {
                                 return (
                                     <PaymentComponent

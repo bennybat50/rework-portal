@@ -4,9 +4,9 @@ import Nav from "../../template/Nav";
 import Topbar from "../../template/Topbar";
 import "../assets/css/project-grid.css";
 import ProjectGridComponent from "./ProjectGridComponent";
-import LoadingMsg from "../../components/LoadingMsg";
+import { RiseLoader } from "react-spinners";
 import { Storage } from "../../context/Store";
-
+import LoadingMsg from "../../components/LoadingMsg";
 function ProjectGridPage() {
   let store = useContext(Storage);
   let [baseUrl] = store.URL;
@@ -19,18 +19,16 @@ function ProjectGridPage() {
     getUSer();
   }, []);
 
-  let [ae_user_ID, ae_setUser_ID] = store.ae_User_ID;
-
+  let [user_id] = store.ae_User_ID;
   let loadProjects = () => {
-    let url = baseUrl + "/students/" + ae_user_ID + "/assessments?type=projects";
-    console.log(url);
+    let url = baseUrl + "/students/" + user_id + "/assessments?type=project";
     fetch(url)
       .then((e) => e.json())
       .then((res) => setProjects(res));
   };
 
   let getUSer = () => {
-    let url = baseUrl + "/students/" + ae_user_ID + "/info";
+    let url = baseUrl + "/students/" + user_id + "/info";
     fetch(url)
       .then((e) => e.json())
       .then((res) => setCourse(res.course.name));
@@ -101,13 +99,13 @@ function ProjectGridPage() {
                         );
                         setTimer(
                           days +
-                            "d " +
-                            hours +
-                            "hr " +
-                            minutes +
-                            "m " +
-                            seconds +
-                            "s "
+                          "d " +
+                          hours +
+                          "hr " +
+                          minutes +
+                          "m " +
+                          seconds +
+                          "s "
                         );
                         if (distance < 0) return setTimer("Expired");
                       }, 1000);

@@ -10,7 +10,7 @@ import { Storage } from "../../context/Store";
 function CourseDetailsPage() {
   let store = useContext(Storage);
   let [baseUrl] = store.URL;
-  let [ae_user_ID, ae_setUser_ID] = store.ae_User_ID;
+  let [user_id] = store.ae_User_ID;
   let [courseDetail, setCourseDetail] = useState([]);
   let [taskProgress, setTaskProgress] = useState([]);
   let [moduleAssignment, setModuleAssignment] = useState([]);
@@ -37,7 +37,6 @@ function CourseDetailsPage() {
       slot +
       "&alias=" +
       alias.alias;
-      console.log(url);
     fetch(url)
       .then((e) => e.json())
       .then((res) => setCourseDetail(res));
@@ -58,14 +57,14 @@ function CourseDetailsPage() {
   };
 
   let loadAssignments = () => {
-    let url = baseUrl + "/students/" + ae_user_ID + "/assessments?type=assignment";
+    let url = baseUrl + "/students/" + user_id + "/assessments?type=assignment";
     fetch(url)
       .then((e) => e.json())
       .then((res) => setModuleAssignment(res));
   };
 
   let loadProjects = () => {
-    let url = baseUrl + "/students/" + ae_user_ID + "/assessments?type=project";
+    let url = baseUrl + "/students/" + user_id + "/assessments?type=project";
     fetch(url)
       .then((e) => e.json())
       .then((res) => setProjects(res));
@@ -86,7 +85,7 @@ function CourseDetailsPage() {
           <div id="content">
             {courseDetail.map((e, i) => {
               return (
-                <Topbar key={i} pageName="Module Details" subName={e.module} />
+                <Topbar key={i} pageName="Course Details" subName={e.module} />
               );
             })}
 
