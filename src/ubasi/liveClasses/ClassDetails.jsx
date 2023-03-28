@@ -42,7 +42,7 @@ const ClassDetails = () => {
     studentId: location?.state?.studentId,
     classId: location?.state?.data?.id,
   })
-
+  
   return (
     <div className="">
       <div>
