@@ -11,7 +11,7 @@ const AllClasses = () => {
   const studentId = '1odi4e7wlfc14uv6';///<===this is dummy used for testing
   // load all live classes
   const {isLoading:fetchingClasses, data:allClasses, isError:fetchingClassesError,} = useFetchAStudentClassesData(studentId);
-
+ 
   return (
     <div className="">
       <div>
