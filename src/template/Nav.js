@@ -34,7 +34,6 @@ class Nav extends React.Component {
       });
 
      
-
     this.state = {
       userData: {},
       courseData: {},
@@ -42,10 +41,10 @@ class Nav extends React.Component {
       nav_cat:""
     };
     
-
-    
   }
+
   render(props) {
+
     const sideBarClick = () => {
       $("body").toggleClass("sidebar-toggled");
       $(".sidebar").toggleClass("toggled");
@@ -62,6 +61,7 @@ class Nav extends React.Component {
         $(".collapse").show();
       }
     };
+
     if ($(window).width() < 968 && !$(".sidebar").hasClass("toggled")) {
       $("body").toggleClass("sidebar-toggled");
       $(".sidebar").toggleClass("toggled");
@@ -161,9 +161,8 @@ class Nav extends React.Component {
     ];
 
 
-
-
     let enteryNav = [ 
+       
     {
       id: 1,
       name: "Project",
@@ -173,33 +172,150 @@ class Nav extends React.Component {
       sub_link: null,
       notice: 0
     },
-    // {
-    //   id: 2,
-    //   name: "Assessment",
-    //   icon: <Book size={18} />,
-    //   link: "/assessment",
-    //   has_sub: false,
-    //   sub_link: null, 
-    //   notice: 0
-    // },
-    // {
-    //   id: 3,
-    //   name: "Live Class",
-    //   icon: <Video size={18} />,
-    //   link: "/liveclass",
-     
-    //   has_sub: false,
-    //   sub_link: null,
-    //   notice: 0
-    // }
+    
   ]
 
-   
-     
+  let selfEnteryNav = [ 
+    {
+      id: 1,
+      name: "Assessment",
+      icon: <Book size={18} />,
+      link: "/assessments",
+      has_sub: false,
+      sub_link: null, 
+      notice: 0
+    },
+    {
+      id: 2,
+      name: "Live Class",
+      icon: <Video size={18} />,
+      link: "/live-classes",
+      has_sub: false,
+      sub_link: null,
+      notice: 0
+    },
+  {
+    id: 3,
+    name: "Project",
+    icon: <Briefcase size={18} />,
+    link: "/entryview",
+    has_sub: false,
+    sub_link: null,
+    notice: 0
+  },
+]
 
-    
+const loadEntryNavView=()=>{
+  return enteryNav.map((e) => {
+    return (
+      <li
+        className={`nav-item ${ window.location.pathname === e.link ||  window.location.pathname.includes(e.sub_link) ? "active" : ""}`}
+      >
+        <Link className="nav-link" to={e.link}>
+          {e.icon}
+          <span>{e.name}</span>{" "}
+          {e.notice > 0 ? (
+            <span className="nav-notice">{e.notice}</span>
+          ) : null}
+        </Link>
+      </li>
+    )
+  })
+}
+
+const loadSelfPaceView=()=>{
+  return selfEnteryNav.map((e) => {
+    return (
+      <li
+        className={`nav-item ${ window.location.pathname === e.link ||  window.location.pathname.includes(e.sub_link) ? "active" : ""}`}
+      >
+        <Link className="nav-link" to={e.link}>
+          {e.icon}
+          <span>{e.name}</span>{" "}
+          {e.notice > 0 ? (
+            <span className="nav-notice">{e.notice}</span>
+          ) : null}
+        </Link>
+      </li>
+    )
+  })
+}
+
+const loadCompleteNavView=()=>{
+  return navs.map((e) => {
+    if (e.name === "Settings" ) {
+      return (
+        <>
+          <hr className="sidebar-divider" />
+          <li
+            className={`nav-item ${ window.location.pathname === "/profile" ||
+            window.location.pathname === "/password"
+                ? "active"
+                : ""
+              }`}
+          >
+            <Link
+              className="nav-link collapsed"
+              to="#"
+              data-toggle="collapse"
+              data-target="#collapseTwo"
+              aria-expanded="true"
+              aria-controls="collapseTwo"
+            >
+              <Settings size={18} />
+              <span>Settings</span>
+            </Link>
+            <div
+              id="collapseTwo"
+              className="collapse"
+              aria-labelledby="headingTwo"
+              data-parent="#accordionSidebar"
+            >
+              <div className="bg-white py-2 collapse-inner rounded">
+                <Link className="collapse-item" to="/profile">
+                  Profile
+                </Link>
+                <Link className="collapse-item" to="/password">
+                  Password
+                </Link>
+              </div>
+            </div>
+          </li>
+        </>
+      );
+    }
+    return (
+      <li
+        className={`nav-item ${ window.location.pathname === e.link ||  window.location.pathname.includes(e.sub_link) ? "active" : ""}`}
+      >
+        <Link className="nav-link" to={e.link}>
+          {e.icon}
+          <span>{e.name}</span>{" "}
+          {e.notice > 0 ? (
+            <span className="nav-notice">{e.notice}</span>
+          ) : null}
+        </Link>
+      </li>
+    ); 
+  })
+}
 
 
+const allNaviagationWithStatus=()=>{
+  if(this.state.userData.learning_mode==="PHYSICAL"||this.state.userData.learning_mode==="VIRTUAL"){
+    if(this.state.userData.reg_status==="ENTRY"){
+      return loadEntryNavView()
+    }else if(this.state.userData.reg_status==="COMPLETED"){
+      return loadCompleteNavView()
+    }
+  }else if(this.state.userData.learning_mode==="SELF_PACE"){
+    if(this.state.userData.reg_status === "COMPLETED" && this.state.userData.has_passed_assessment===false){
+      return loadSelfPaceView()
+    }else if(this.state.userData.reg_status === "COMPLETED" && this.state.userData.has_passed_assessment===true){
+      return loadCompleteNavView()
+    }
+  }
+}
 
     return (
       <ul
@@ -259,81 +375,9 @@ class Nav extends React.Component {
           </div>
         </Link>
 
-        {window.location.pathname === "/entryview" || window.location.pathname === "/assessment"|| window.location.pathname === "/liveclass"? enteryNav.map((e) => {
-          return (
-            <li
-              className={`nav-item ${ window.location.pathname === e.link ||  window.location.pathname.includes(e.sub_link) ? "active" : ""}`}
-            >
-              <Link className="nav-link" to={e.link}>
-                {e.icon}
-                <span>{e.name}</span>{" "}
-                {e.notice > 0 ? (
-                  <span className="nav-notice">{e.notice}</span>
-                ) : null}
-              </Link>
-            </li>
-          )
-        }) : navs.map((e) => {
-          if (e.name == "Settings" && e.nav_cat === "entry") {
-            return (
-              <>
-                <hr className="sidebar-divider" />
-                <li
-                  className={`nav-item ${ window.location.pathname == "/profile" ||
-                  window.location.pathname == "/password"
-                      ? "active"
-                      : ""
-                    }`}
-                >
-                  <Link
-                    className="nav-link collapsed"
-                    to="#"
-                    data-toggle="collapse"
-                    data-target="#collapseTwo"
-                    aria-expanded="true"
-                    aria-controls="collapseTwo"
-                  >
-                    <Settings size={18} />
-                    <span>Settings</span>
-                  </Link>
-                  <div
-                    id="collapseTwo"
-                    className="collapse"
-                    aria-labelledby="headingTwo"
-                    data-parent="#accordionSidebar"
-                  >
-                    <div className="bg-white py-2 collapse-inner rounded">
-                      <Link className="collapse-item" to="/profile">
-                        Profile
-                      </Link>
-                      <Link className="collapse-item" to="/password">
-                        Password
-                      </Link>
-                    </div>
-                  </div>
-                </li>
-              </>
-            );
-          }
+        {allNaviagationWithStatus()}
 
-          return (
-            <li
-              className={`nav-item ${ window.location.pathname === e.link ||  window.location.pathname.includes(e.sub_link) ? "active" : ""}`}
-            >
-              <Link className="nav-link" to={e.link}>
-                {e.icon}
-                <span>{e.name}</span>{" "}
-                {e.notice > 0 ? (
-                  <span className="nav-notice">{e.notice}</span>
-                ) : null}
-              </Link>
-            </li>
-          );
-
-
-
-
-        })}
+      
       </ul>
     );
   }

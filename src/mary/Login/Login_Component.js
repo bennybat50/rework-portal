@@ -11,7 +11,6 @@ function LoginComponent() {
   let data = useContext(Storage);
   let [steps, setStep] = data.ae_Form_Step;
   let navigate = useNavigate();
-
   let [ae_user_ID, ae_setUser_ID] = data.ae_User_ID;
   let [ae_user_Status, ae_setUser_Status] = data.ae_User_Status;
   //   let [ae_user_details, ae_setUser_Details] = data.ae_User_Details;
@@ -60,15 +59,23 @@ function LoginComponent() {
           setStep(res.data.reg_status);
 
           console.log(result);
-           if (
-            res.data.reg_status === "ENTRY"
-          ) {
-            navigate("/entryview");
-          } else if (res.data.reg_status === "COMPLETED") {
-            navigate("/dashboard");
-          } else {
-            navigate("/register");
-          }
+           if(res.data.learning_mode==="PHYSICAL"||res.data.learning_mode==="VIRTUAL" ){
+            if (
+              res.data.reg_status === "ENTRY"
+            ) {
+              navigate("/entryview");
+            } else if (res.data.reg_status === "COMPLETED") {
+              navigate("/dashboard");
+            } else {
+              navigate("/register");
+            }
+           }else if(res.data.learning_mode==="SELF_PACE"){
+            if ( res.data.reg_status === "COMPLETED" && res.data.has_passed_assessment===false) {
+              navigate("/assessments");
+            } else if (res.data.reg_status === "COMPLETED" && res.data.has_passed_assessment===true) {
+              navigate("/dashboard");
+            } 
+           }
         }
         setIsLoading(false);
       })
