@@ -16,6 +16,7 @@ function AssessmentVideoPage() {
 
     let loadUserModule = () => {
         let url = `${baseUrl}/students/${user_id}/self-pace/current-module`;
+        console.log(url);
         fetch(url)
             .then((e) => e.json())
             .then(res => setModule(res))

@@ -207,7 +207,6 @@ function EntryViewComponent() {
                   <p className="ae_entry_title">Project Information</p>
                   <div className="ae_entry_main_title">
                     <h1>{userProject.title}</h1>
-
                   </div>
                 </div>
                 <div class="card-body">

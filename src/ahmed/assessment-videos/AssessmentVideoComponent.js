@@ -24,6 +24,7 @@ function CustomToggle({ eventKey }) {
 function AssessmentVidsComponent(props) {
     let store = useContext(Storage);
     let [user_id] = store.ae_User_ID;
+    
     let baseUrl = store.URL;
     let [user_type, setUserType] = useState("student");
     let [msg, setMsg] = useState("");
