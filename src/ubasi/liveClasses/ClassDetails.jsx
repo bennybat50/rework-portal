@@ -91,7 +91,7 @@ const ClassDetails = () => {
             <span className="col-lg-6 text-dark d-block d-md-flex  align-items-center justify-content-between">
               <h6 className="text-dark fs-6 fw-bold d-flex">
                 Date:
-                <p className="text-secondary fw-normal p-0">
+                <p className="text-secondary fw-normal p-0 ms-1">
                   {details?.data?.date}
                   {"  "}
                   {details?.data?.start_time}
@@ -100,14 +100,14 @@ const ClassDetails = () => {
 
               <h6 className="text-dark fs-6 fw-bold d-flex">
                 Duration:
-                <p className="text-secondary fw-normal p-0">
+                <p className="text-secondary fw-normal p-0 ms-1">
                   {details?.data?.duration_in_hour} hours
                 </p>
               </h6>
 
               <h6 className="text-dark fs-6 fw-bold d-flex">
                 Class Size:
-                <p className="text-secondary fw-normal p-0">
+                <p className="text-secondary fw-normal p-0 ms-1">
                   {details?.data?.class_size}
                 </p>
               </h6>
@@ -190,7 +190,7 @@ const ClassDetails = () => {
             </div>:checkFailed?<h4 className="text-danger">couldn't check if enrolled</h4>:null}
               <h6 className="text-dark fs-6 fw-bold d-flex align-items-center">
                 Instructor:
-                <p className="fw-normal p-0">{details?.data?.trainer?.name}</p>
+                <p className="fw-normal p-0 ms-1">{details?.data?.trainer?.name}</p>
               </h6>
             </span>
 
@@ -222,7 +222,7 @@ const ClassDetails = () => {
           </div>
 
           {/*======================  */}
-          <ClassNavItem nav={classNav} data={details?.data} />
+          <ClassNavItem nav={classNav} data={details?.data} isEnrolled={isEnrolled} />
         </div>
       </div>
     </div>

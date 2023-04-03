@@ -2,7 +2,9 @@ import React from "react";
 import { Users, Star, PlayCircle } from "react-feather";
 
 const ClassNavItem = (props) => {
-  const { data } = props;
+  const { data,isEnrolled } = props;
+
+
   switch (props.nav) {
     case "Instructor":
       return (
@@ -37,8 +39,13 @@ const ClassNavItem = (props) => {
       break;
     case "Class Recording":
       return <div className="text-dark mt-2" style={{minHeight:"20vh"}}>
-        <h4 className="fw-bold">Class Recordings</h4>
+        {
+          isEnrolled?<>
+            <h4 className="fw-bold">Class Recordings</h4>
         {data?.recording_link}
+          </>:<h6 className="text-warning">Please enroll for class to access Recordings</h6>
+        }
+        
         </div>;
       break;
     case "Objective":

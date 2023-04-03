@@ -79,7 +79,7 @@ export const useStudentEnrollmentData = ({studentId,classId}) =>{
     })
 }
 
-// enroll for a class
+// enroll student for a class
 export const useEnrollForClassData = ({studentId, classId})=>{
     const queryClient = useQueryClient();
     return useMutation(enrollForClass,{
