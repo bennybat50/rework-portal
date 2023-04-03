@@ -9,7 +9,7 @@ function ProjectGridComponent(props) {
     };
     return <>
         <div className="project-grid-ah">
-            <Link to={"/project-details-" + props.id} className="link-ah">
+            <Link to={"/project-details/" + props.id} className="link-ah">
                 <div className="card-body">
                     <div className="project-grid-status-ah flex-btw-ah">
                         <span style={{ backgroundColor: statusColor }}>
@@ -62,7 +62,7 @@ function ProjectGridComponent(props) {
 
             <div className="card-body">
                 <div className="project-grid-content">
-                    <Link to={"/project-details-" + props.id} className="link-ah">
+                    <Link to={"/project-details/" + props.id} className="link-ah">
                         <section>
                             <p>
                                 {props.note}

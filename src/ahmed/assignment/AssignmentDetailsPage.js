@@ -9,7 +9,7 @@ import AssignmentPhaseComponent from "./AssignmentPhaseComponent";
 import AssignmentReviewComponent from "./AssignmentReviewComponent";
 import AssignmentSubmitPhaseComponent from "./AssignmentSubmitPhaseComponent";
 import AssignmentUploadFileComponent from "./AssignmentUploadFilePhaseComponent";
-import LoadingMsg from "../../components/LoadingMsg";
+import { RiseLoader } from "react-spinners";
 import { useParams } from "react-router-dom";
 import { Storage } from "../../context/Store";
 
@@ -20,11 +20,10 @@ function AssignmentDetailsPage() {
   let [assignmentDetails, setAssignmentDetails] = useState([]);
   let [phase, setPhase] = useState([]);
   let id = useParams();
- 
-  let [phaseData, setPhaseData] = useState({});
+
   let statusColor;
 
-  let [ae_user_ID, ae_setUser_ID] = store.ae_User_ID;
+  let [user_id] = store.ae_User_ID;
   let [user_type, setUserType] = useState("student");
   let [msg, setMsg] = useState("");
   let [err, setErr] = useState("");
@@ -44,11 +43,10 @@ function AssignmentDetailsPage() {
     let url =
       baseUrl +
       "/students/" +
-      ae_user_ID +
+      user_id +
       "/assessments/" +
       id.id +
       "?type=assignments";
-      console.log(url);
     fetch(url)
       .then((e) => e.json())
       .then((res) => {
@@ -62,7 +60,7 @@ function AssignmentDetailsPage() {
     let url =
       baseUrl +
       "/students/" +
-      ae_user_ID +
+      user_id +
       "/assessments/" +
       id.id +
       "?type=assignments";
@@ -72,7 +70,7 @@ function AssignmentDetailsPage() {
   };
 
   let postReview = () => {
-    let data = { ae_user_ID, user_type, msg };
+    let data = { user_id, user_type, msg };
     let url = baseUrl + "/forums";
 
     fetch(url, {
@@ -114,11 +112,14 @@ function AssignmentDetailsPage() {
 
             <div className="container">
               {assignmentDetails.length == 0 ? (
-                <LoadingMsg />
+                <RiseLoader
+                  color="#00afef"
+                  style={{ display: "flex", justifyContent: "center" }}
+                />
               ) : (
                 <div className="row mb-3 g-3">
                   <div className="col-md-8">
-                    <div className="project-details-ah px-4 py-3 card">
+                    <div className="project-details-ah px-4 py-3">
                       {assignmentDetails.map((e, i) => {
                         if (e.status == "CURRENT") {
                           statusColor = "#FEC400";
@@ -235,9 +236,6 @@ function AssignmentDetailsPage() {
                         }
 
                         return (
-                          <div onClick={()=>{
-                            setPhaseData(e)
-                          }}>
                           <AssignmentPhaseComponent
                             taskData={e.tasks}
                             phaseNo={e.name}
@@ -247,7 +245,6 @@ function AssignmentDetailsPage() {
                             currentPhase={currentStatus}
                             pendingPhase={pendingStatus}
                           />
-                          </div>
                         );
                       })}
 
@@ -271,7 +268,7 @@ function AssignmentDetailsPage() {
                             </button>
                           </div>
 
-                          {/* <div className="forum-body-ah mt-3">
+                          <div className="forum-body-ah mt-3">
                             {review.map((e, i) => {
                               let showTrainer;
                               if (e.user_type === "trainer") {
@@ -290,21 +287,19 @@ function AssignmentDetailsPage() {
                                 />
                               );
                             })}
-                          </div> */}
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   <div className="col-md-4">
-                  {phaseData==={}? <div className="project-details-ah pb-3 card">
-                    <h4>Please select a phase</h4>
-                    </div> :  <div className="project-details-ah pb-3 card">
+                    <div className="project-details-ah pb-3">
                       <div
                         className="py-3 submit-card-header-ah"
                         style={{ borderBottom: "1px solid silver" }}
                       >
-                        <h1 className="mx-4">submit phase {phaseData.name}</h1>
+                        <h1 className="mx-4">submit phase</h1>
                       </div>
 
                       <div className="pt-2 submit-card-body-ah">
@@ -334,14 +329,12 @@ function AssignmentDetailsPage() {
                           }
                           return (
                             <AssignmentSubmitPhaseComponent
-                              currentSubmission={phaseData.submitted}
-                              maxSubmission={phaseData.submission_trials}
-                              phaseNo={phaseData.name}
+                              currentSubmission={e.submitted}
+                              maxSubmission={e.submission_trials}
+                              phaseNo={e.name}
                               color={color}
                               disableBtn={btn}
                               index={i}
-                              assessment={id.id}
-                              phaseId={phaseData.id}
                               showSubmit={show}
                             />
                           );
@@ -354,13 +347,11 @@ function AssignmentDetailsPage() {
                               <AssignmentUploadFileComponent
                                 key={i}
                                 files={e.submissions}
-                                
                               />
                             );
                         })}
                       </div>
-                    </div> }
-                   
+                    </div>
                   </div>
                 </div>
               )}

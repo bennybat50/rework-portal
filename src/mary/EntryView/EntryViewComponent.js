@@ -4,7 +4,8 @@ import { Storage } from '../../context/Store';
 import { UploadCloud } from 'react-feather';
 import '../assets/css/entryView.css';
 import axios from 'axios';
-import { SyncLoader } from "react-spinners";
+import LoadingMsg from "../../components/LoadingMsg";
+import {SyncLoader} from 'react-spinners'
 function EntryViewComponent() {
   let data = useContext(Storage);
   const [baseUrl] = useState('https://reworkacademy.co/app/v2/');
@@ -37,6 +38,7 @@ function EntryViewComponent() {
 
 
   let viewStudentProject = () => {
+    setIsLoading(true)
     let url =
       baseUrl + `students/${ae_user_ID}/assessments?type=current_project`;
     fetch(url)
@@ -52,14 +54,10 @@ function EntryViewComponent() {
         if (ae_user_ID && res.type === 'NOT_ASSIGNED') {
           setProjectMsg(res.msg);
         }
+        setIsLoading(false)
       });
 
   };
-
-   
-
-
-
 
   useEffect(() => {
     viewStudentProject() 
@@ -159,11 +157,45 @@ function EntryViewComponent() {
     element.click();
   };
 
+  const loadProjectResourcesView=()=>{
+    if(userProject.title == null){
+      return (<div className="text-center" >
+      <h4>Project Not assigned !</h4>
+      <p>Complete assessment class to get your project</p><br /><br /></div>)
+    }else{
+      return (<>
+        <p>(Duration: {userProject.duration})</p><br />
+        <p>Brief Description:</p>
+        {userProject.descp}
+
+        {userProject.phases?.map((e) => {
+
+          return (
+            <button
+              className="mt-3 mb-4 col col-sm-12 col-md-8 col-lg-8  btn btn-primary btn-user btn-block shadow-lg py-3"
+              id="downloadBtn"
+              value="download"
+            >
+              <link size="12px" />
+              <a
+                href={userProject.resource_links}
+                download
+                style={{ color: 'white', textDecoration: 'none' }}
+              >
+                Click here to download resources
+              </a>
+            </button>
+          );
+        })}
+      </>)
+    }
+  }
+
   
 
   return (
     <>
-      <div className="ae_entry_view row d-flex ">
+      {isLoading?<LoadingMsg/>:<><div className="ae_entry_view row d-flex ">
         {ae_projectSubmitted === true ? (
           ''
         ) : (
@@ -175,37 +207,10 @@ function EntryViewComponent() {
                   <p className="ae_entry_title">Project Information</p>
                   <div className="ae_entry_main_title">
                     <h1>{userProject.title}</h1>
-
                   </div>
                 </div>
                 <div class="card-body">
-                  {userProject.title == null ? <div className="text-center" >
-                    <h4>Project Not assigned !</h4>
-                    <p>Complete assessment class to get your project</p><br /><br /></div> : <>
-                    <p>(Duration: {userProject.duration})</p><br />
-                    <p>Brief Description:</p>
-                    {userProject.descp}
-
-                    {userProject.phases?.map((e) => {
-
-                      return (
-                        <button
-                          className="mt-3 mb-4 col col-sm-12 col-md-8 col-lg-8  btn btn-primary btn-user btn-block shadow-lg py-3"
-                          id="downloadBtn"
-                          value="download"
-                        >
-                          <link size="12px" />
-                          <a
-                            href={userProject.resource_links}
-                            download
-                            style={{ color: 'white', textDecoration: 'none' }}
-                          >
-                            Click here to download resources
-                          </a>
-                        </button>
-                      );
-                    })}
-                  </>}
+                  {loadProjectResourcesView() }
 
                 </div>
               </div>
@@ -350,7 +355,7 @@ function EntryViewComponent() {
             </div>
           </div>
         </div>
-      )}
+      )}</>}
     </>
   );
 }

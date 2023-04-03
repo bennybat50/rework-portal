@@ -11,13 +11,36 @@ function AssessmentVideoPage() {
     let store = useContext(Storage);
     let [baseUrl] = store.URL;
     let [user_id] = store.ae_User_ID;
-    let [courseDetail, setCourseDetail] = useState([]);
-    let [taskProgress, setTaskProgress] = useState([]);
-    let [moduleAssignment, setModuleAssignment] = useState([]);
-    let [projects, setProjects] = useState([]);
+    let [module, setModule] = useState([]);
     let [forum, setForum] = useState([]);
 
+    let loadUserModule = () => {
+        let url = `${baseUrl}/students/${user_id}/self-pace/current-module`;
+        console.log(url);
+        fetch(url)
+            .then((e) => e.json())
+            .then(res => setModule(res))
+    };
+
+    let loadForum = () => {
+        let url = baseUrl + "/forums?batch=batch_10&slot=weekday";
+        fetch(url)
+            .then((e) => e.json())
+            .then((res) => setForum(res));
+    };
+    
+    // let loadCurrentModule = (a) => {
+    //     let url = `${baseUrl}/students/${user_id}/self-pace/modules/${a}`;
+    //     fetch(url)
+    //         .then((e) => e.json())
+    //         .then(res => setModule(res))
+    // };
+
+
+
     useEffect(() => {
+        loadUserModule();
+        loadForum();
     }, []);
     return (
         <>
@@ -29,52 +52,8 @@ function AssessmentVideoPage() {
 
                         <div className="container" style={{ background: "white" }}>
                             <AssessmentVidsComponent
-                                forum={[
-                                    {
-                                        "avatar": "https://img.freepik.com/free-icon/user_318-159711.jpg",
-                                        "name": "Ahmed",
-                                        "user_type": "trainer",
-                                        "created_at": "3m",
-                                        "msg": "testing done"
-                                    }, {
-                                        "avatar": "https://img.freepik.com/free-icon/user_318-159711.jpg",
-                                        "name": "Young",
-                                        "user_type": "student",
-                                        "created_at": "3m",
-                                        "msg": "testing done testing donetesting done testing done testing done testing done testing done testing done testing done testing done testing done testing done testing done testing donetesting done testing done testing done testing done testing done testing done testing donetesting done testing done testing done"
-                                    }, {
-                                        "avatar": "https://img.freepik.com/free-icon/user_318-159711.jpg",
-                                        "name": "Young",
-                                        "user_type": "student",
-                                        "created_at": "3m",
-                                        "msg": "testing done"
-                                    }, {
-                                        "avatar": "https://img.freepik.com/free-icon/user_318-159711.jpg",
-                                        "name": "Young33",
-                                        "user_type": "student",
-                                        "created_at": "3m",
-                                        "msg": "testing done"
-                                    }, {
-                                        "avatar": "https://img.freepik.com/free-icon/user_318-159711.jpg",
-                                        "name": "Young55",
-                                        "user_type": "trainer",
-                                        "created_at": "3m",
-                                        "msg": "testing done"
-                                    }, {
-                                        "avatar": "https://img.freepik.com/free-icon/user_318-159711.jpg",
-                                        "name": "Young4",
-                                        "user_type": "student",
-                                        "created_at": "3m",
-                                        "msg": "testing done"
-                                    }, {
-                                        "avatar": "https://img.freepik.com/free-icon/user_318-159711.jpg",
-                                        "name": "Young2",
-                                        "user_type": "student",
-                                        "created_at": "3m",
-                                        "msg": "testing done"
-                                    }
-
-                                ]}
+                                content={module}
+                                forum={forum}
                             />
                         </div>
                     </div>

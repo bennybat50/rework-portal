@@ -135,8 +135,8 @@ function PaymentComponent(props) {
                         <td>
                           <p id="table-sn-ah">{i + 1}</p>
                         </td>
-                        <td id="table-amount-ah">₦ {e.paid}</td>
-                        <td id="table-date-ah">{e.date_paid}</td>
+                        <td id="table-amount-ah">₦ {e.amount}</td>
+                        <td id="table-date-ah">{e.date}</td>
                         <td id="table-date-ah">{method}</td>
                         <td
                           id="table-approve-ah"
@@ -149,7 +149,7 @@ function PaymentComponent(props) {
                             id="table-receipt-ah"
                             style={{ visibility: showReceipt }}
                           >
-                            <Link to={"/receipt-" + e.id}>print receipt</Link>
+                            <Link to={"/receipt/" + e.id}>print receipt</Link>
                           </p>
                         </td>
                       </tr>

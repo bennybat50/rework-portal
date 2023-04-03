@@ -17,7 +17,7 @@ function CourseDetailsComponent(props) {
   const [forumTabBody, setForumTab] = useState("none");
   let [timer_assignment_ah, setAssignmentTimer] = useState();
   let [timer_project_ah, setProjectTimer] = useState();
-  let [ae_user_ID, ae_setUser_ID] = store.ae_User_ID;
+  let [user_id] = store.ae_User_ID;
   let baseUrl = store.URL;
   let [user_type, setUserType] = useState("student");
   let [msg, setMsg] = useState("");
@@ -60,7 +60,7 @@ function CourseDetailsComponent(props) {
   };
 
   let postReview = () => {
-    let data = { ae_user_ID, user_type, msg };
+    let data = { user_id, user_type, msg };
     let url = baseUrl + "/forums";
 
     fetch(url, {
@@ -83,7 +83,7 @@ function CourseDetailsComponent(props) {
         <div className="row mx-3 mb-3">
           <div className="col-lg-8">
             <div className="mb-3 pb-3 main-course-details-container-ah">
-              <div className="card">
+              <div>
                 <div className="card-ah">
                   <div className="card-img-ah">
                     <span style={{ left: "24px" }}>
@@ -486,7 +486,7 @@ function CourseDetailsComponent(props) {
                     </div>
 
                     <div className="forum-body-ah mt-3">
-                      {/* {forum_details.map((e, i) => {
+                      {forum_details.map((e, i) => {
                         let showTrainer;
                         if (e.user_type === "trainer") {
                           showTrainer = "flex";
@@ -514,7 +514,7 @@ function CourseDetailsComponent(props) {
                             </div>
                           </div>
                         );
-                      })} */}
+                      })}
 
                       {/* <div className="forum-msgs-ah mt-4 px-4 py-2">
                                             <div className="forum-msgs-header-ah">
@@ -578,7 +578,7 @@ function CourseDetailsComponent(props) {
 
           <div className="col-lg-4 mb-3`">
             <div className="course-days-ah">
-              <div className="py-2 card">
+              <div className="py-2">
                 <div className="container days-header-ah">
                   <p>current module</p>
                   <h4>use external javascript files.</h4>
@@ -593,7 +593,7 @@ function CourseDetailsComponent(props) {
                       }}
                     />
                     <p>
-                      Topics {props.current} of {props.total}
+                      Modules {props.current} of {props.total}
                     </p>
                   </div>
                   <div

@@ -4,9 +4,9 @@ import Nav from "../../template/Nav";
 import Topbar from "../../template/Topbar";
 import "../assets/css/project-grid.css";
 import AssignmentGridComponent from "./AssignmentGridComponent";
-import LoadingMsg from "../../components/LoadingMsg";
+import { RiseLoader } from "react-spinners";
 import { Storage } from "../../context/Store";
-
+import LoadingMsg from "../../components/LoadingMsg";
 function AssignmentGridPage() {
   let store = useContext(Storage);
   let [baseUrl] = store.URL;
@@ -19,17 +19,17 @@ function AssignmentGridPage() {
     getUSer();
   }, []);
 
-  let [ae_user_ID, ae_setUser_ID] = store.ae_User_ID;
+  let [user_id] = store.ae_User_ID;
 
   let loadAssignments = () => {
-    let url = baseUrl + "/students/" + ae_user_ID + "/assessments?type=assignments";
+    let url = baseUrl + "/students/" + user_id + "/assessments?type=assignment";
     fetch(url)
       .then((e) => e.json())
       .then((res) => setAssignment(res));
   };
 
   let getUSer = () => {
-    let url = baseUrl + "/students/" + ae_user_ID + "/info";
+    let url = baseUrl + "/students/" + user_id + "/info";
     fetch(url)
       .then((e) => e.json())
       .then((res) => setCourse(res.course.name));
@@ -45,7 +45,7 @@ function AssignmentGridPage() {
             <div className="container-fluid">
               <div className="row">
                 {assignment.length == 0 ? (
-                  <LoadingMsg />
+                  <LoadingMsg/>
                 ) : (
                   assignment.map((e, i) => {
                     let color;

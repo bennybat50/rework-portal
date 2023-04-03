@@ -1,55 +1,28 @@
-import axios from "axios";
 import React, { useState, useContext } from "react";
-import { SyncLoader } from "react-spinners";
 import { Storage } from "../../context/Store";
 
 function ProjectSubmitPhaseComponent(props) {
-
   let store = useContext(Storage);
   let [file, setFile] = useState("");
+  let [phase_id, setPhaseId] = useState("");
   let [success, setSuccess] = useState("");
-
-  let [ae_user_ID, ae_setUser_ID] = store.ae_User_ID;
+  let [assessment_id] = useState(props.assessment);
+  let [user_id] = store.ae_User_ID;
   let baseUrl = store.URL;
-
-  let [isLoading, setIsLoading] = useState(false);
-  let [uploadStatus, setUploadStatus] = useState(false);
-  let [proof, setProof] = useState("");
-  let [projectFile, setProjectFile] = useState({});
-
-  console.log(props.assessment);
-  const handleChange = (e) => {
-    let file = e.target.files[0].name;
-    console.log(file);
-    setProof(e.target.files[0].name);
-    setProjectFile(e.target.files[0]);
-    console.log(file);
-    setUploadStatus(true);
-  };
-
+ 
   let uploadFile = () => {
-    setIsLoading(true)
-    let url = baseUrl + "/assessments/submit";
-    console.log(url); 
-
+    let url = baseUrl + "/assessements/submit";
     const formData = new FormData();
-    formData.append("resource", projectFile);
-    formData.append("assessment_id", props.assessment);
-    formData.append("phase_id", props.phaseId);
-    formData.append("user_id", ae_user_ID);
+    formData.append("resource", file);
+    formData.append("assessment_id", assessment_id);
+    formData.append("user_id", user_id);
+    formData.append("phase_id", phase_id);
 
-    axios.postForm(url, formData).then((res) => {
-      console.log(res.data);
-      if(res.data.type!=="SUCCESS"){
-        alert(res.data.msg)
-      }else{
-        alert("Project Uploaded Successfully")
-        window.location.reload()
-      }
-      setIsLoading(false)
-    }).catch((err) => { console.log(err); setIsLoading(false); alert("An error occured while uploading the project file, please try again") })
-
-    
+    fetch(url, { method: "POST", body: formData })
+      .then((res) => res.json())
+      .then((result) => {
+        setSuccess(result.msg);
+      });
   };
 
   return (
@@ -79,7 +52,7 @@ function ProjectSubmitPhaseComponent(props) {
                   fill="#474747"
                 />
               </svg>
-              <p>  {proof === "" ? `Upload zipped file for ${props.phaseNo ?? ""}` : proof}</p>
+              <h3>Upload zipped file for {props.phaseNo}</h3>
             </label>
             <input
               className="phaseUpload"
@@ -88,19 +61,16 @@ function ProjectSubmitPhaseComponent(props) {
               disabled={props.disableBtn}
               name="resource"
               value={file}
-              onChange={handleChange}
+              onChange={(e) => { setFile(e.target.value); setPhaseId(props.phaseId) }}
             />
           </section>
-
-        </div>
-        <div className="text-center">
           <button
             disabled={props.disableBtn}
             id="submitPhaseBtn"
-            class="btn btn-primary btn-icon-split shadow px-5 py-2"
+            class="btn btn-primary btn-icon-split shadow"
             onClick={() => uploadFile()}
           >
-            {isLoading ? <SyncLoader color="white" size={8} /> : `Submit Phase ${props.phaseNo ?? ""}`}
+            submit {props.phaseNo}
           </button>
         </div>
       </div>
